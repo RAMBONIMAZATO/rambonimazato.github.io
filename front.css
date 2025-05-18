@@ -8,7 +8,7 @@ body {
   
   nav {
     /* background-color: lightblue;*/
-    background: linear-gradient(#606c88,#3f4c6b);
+    background: linear-gradient(#EFEFBB,#D4D3DD);
     color: black;
     display: flex;
     justify-content: space-between;
