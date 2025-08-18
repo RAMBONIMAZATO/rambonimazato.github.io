@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAMBONIMAZATO Osé Jacob</title>
+  <meta name="description" content="Portfolio interactif, responsive, accessible et prêt pour GitHub Pages." />
+  <style>
+    /* --- Design tokens ----------------------------------------------------- */
+    :root {
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-contrast: #ffffff;
+      --shadow: 0 8px 24px rgba(2, 6, 23, 0.06);
+      --radius: 16px;
+      --space: 18px;
+      --container: 1100px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --card: #121a2b;
+        --border: #1f2a44;
+        --accent: #60a5fa;
+        --accent-contrast: #0b1220;
+        --shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+      }
+    }
+    /* force mode sombre/clair via .theme-dark/.theme-light sur <body> */
+    body.theme-light { color-scheme: light; }
+    body.theme-dark  { color-scheme: dark; }
+
+    /* --- Reset minimal ----------------------------------------------------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    /* --- Layout ------------------------------------------------------------ */
+    .container { max-width: var(--container); margin-inline: auto; padding: 20px; }
+    header.sticky { position: sticky; top: 0; backdrop-filter: blur(8px); background: color-mix(in oklab, var(--bg) 80%, transparent); border-bottom: 1px solid var(--border); z-index: 20; }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 44px; height: 44px; border-radius: 999px; border: 2px solid var(--border); }
+    .brand small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 12px; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+    .btn[aria-pressed="true"], .btn.primary { background: var(--accent); color: var(--accent-contrast); border-color: transparent; }
+    .btn:focus-visible { outline: 3px solid color-mix(in oklab, var(--accent), white 60%); outline-offset: 2px; }
+
+    /* --- Hero / Search / Filters ------------------------------------------ */
+    .grid-hero { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: center; }
+    @media (min-width: 900px) { .grid-hero { grid-template-columns: 1.2fr .8fr; } }
+    h1 { font-size: clamp(24px, 2.8vw, 34px); margin: 0; }
+    .lead { color: var(--muted); line-height: 1.6; }
+
+    .panel { border: 1px solid var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); border-radius: calc(var(--radius) + 8px); padding: 18px; box-shadow: var(--shadow); }
+    .search { position: relative; display: flex; gap: 10px; align-items: center; }
+    .search input { flex: 1; padding: 12px 14px 12px 40px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); }
+    .search svg { position: absolute; left: 12px; width: 18px; top: 50%; translate: 0 -50%; }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .chip { padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); cursor: pointer; font-size: 14px; }
+    .chip[aria-pressed="true"] { background: color-mix(in oklab, var(--accent) 10%, var(--card)); border-color: color-mix(in oklab, var(--accent) 40%, var(--border)); }
+
+    /* --- Projects grid ----------------------------------------------------- */
+    .section-title { display:flex; justify-content:space-between; align-items:center; margin: 26px 0 14px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: clip; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+    .thumb { aspect-ratio: 16/10; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+    .card:hover .thumb img { transform: scale(1.03); }
+    .card-body { padding: 14px 16px 16px; display: grid; gap: 10px; }
+    .meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .meta time { color: var(--muted); font-size: 14px; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { font-size: 12px; border: 1px solid var(--border); border-radius: 999px; padding: 4px 8px; color: var(--muted); }
+    .links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* --- About / Contact --------------------------------------------------- */
+    .two { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .two { grid-template-columns: 1fr 1fr; } }
+
+    footer { text-align: center; color: var(--muted); font-size: 14px; padding: 28px 0 40px; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="sticky">
+    <div class="container" style="display:flex; align-items:center; gap:16px; justify-content:space-between;">
+      <div class="brand">
+        <img src="E:\Doc. Osé\PORTEFOLIO\ose.jpg" alt="Osé" />
+        <div>
+          <small>Developer|Data analyst|Data scientist</small>
+          <strong style="font-size:16px;">RAMBONIMAZATO Osé Jacob</strong>
+        </div>
+      </div>
+      <nav class="actions" aria-label="Liens rapides">
+        <a class="btn" href="#projets">Projets</a>
+        <a class="btn" href="#apropos">À propos</a>
+        <a class="btn" href="#contact">Contact</a>
+        <a class="btn primary" href="mailto:oserambonimazato@gmail.com">Me contacter</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Projets -->
+    <section id="projets" aria-labelledby="titre-projets">
+      <div class="section-title">
+        <h2 id="titre-projets" style="margin:0; font-size: clamp(20px, 2.2vw, 26px);">Projets réalisés</h2>
+        <output id="count" aria-live="polite"></output>
+      </div>
+      <div class="grid" id="grid">
+        <!-- Project Card 1 -->
+        <article class="card" data-title="Dashboard Analytics" data-desc="Tableau de bord interactif" data-tags="ui tailwind" data-year="2025">
+          <div class="thumb"><img src="E:\Doc. Osé\PORTEFOLIO\dashboard1.png" alt="Aperçu Dashboard" loading="dashboard"></div>
+          <div class="card-body">
+            <div class="meta">
+              <h3 style="margin:0; font-size:18px;">Dashboard Analytics</h3>
+              <time datetime="2025">2025-2022</time>
+            </div>
+            <p class="lead" style="margin:0;">Automatisation sur le traitement, l'extraction et l'analyse des données afin de créer un tableau de bord interactif pour voir les tendances des informations</p>
+            <div class="tags"><span class="tag">Postgresql</span></div>
+            <div class="links">
+              <a class="btn" href="#" target="_blank" rel="noreferrer">Python</a>
+              <a class="btn" href="#" target="_blank" rel="noreferrer">R/STATA</a>
+              <a class="btn" href="#" target="_blank" rel="noreferrer">SQL</a>
+              <a class="btn" href="#" target="_blank" rel="noreferrer">ArcGis Pro</a>
+              <a class="btn" href="#" target="_blank" rel="noreferrer">Power BI</a>
+            </div>
+          </div>
+        </article>
+        <!-- Project Card 2 -->
+        <article class="card" data-title="D" data-desc="Expérience 3D" data-tags="portfolio animation" data-year="2019">
+          <div class="thumb"><img src="E:\Doc. Osé\PORTEFOLIO\rgpd.png" alt="RGPD" loading="lazy"></div>
+          <div class="card-body">
+            <div class="meta">
+              <h3 style="margin:0; font-size:18px;">Classification Machine Learning</h3>
+              <!--<time datetime="2019">2019</time>-->
+            </div>
+            <p class="lead" style="margin:0;">Avril-Septembre 2019: Projet machine learning pour classifier les politiques de confidentialités des sites web sur les 11 aspets du RGPD.</p>
+            <!--<div class="tags"><span class="tag">portfolio</span><span class="tag">animation</span></div>-->
+            <div class="links">
+              <a class="btn" href="#" target="_blank" rel="noreferrer">Python</a>
+              <a class="btn" href="#" target="_blank" rel="noreferrer">Java</a>
+            </div>
+          </div>
+        </article>
+	<!-- Project Card 3 -->
+        <article class="card" data-title="UI Kit" data-desc="Système de composants" data-tags="ui" data-year="2024">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1400&auto=format&fit=crop" alt="UI Kit" loading="lazy"></div>
+          <div class="card-body">
+            <div class="meta">
+              <h3 style="margin:0; font-size:18px;">Application Web/Mobile</h3>
+              <time datetime="2017">2022-2017</time>
+            </div>
+            <p class="lead" style="margin:0;">Création des interfaces web et mobile afin d'automatiser des différentes tâches administratives en temps réel et développer différentes modules d'utilisation.</p>
+            <div class="tags"><span class="tag">Ionic</span><span class="tag">AngularJs/NodeJs</span><span class="tag">JavaEE</span><span class="tag">Tkinter/Django</span></div>
+            <div class="links">
+              <a class="btn" href="#" target="_blank" rel="noreferrer">Python</a>
+	      <a class="btn" href="#" target="_blank" rel="noreferrer">Java</a>
+	      <a class="btn" href="#" target="_blank" rel="noreferrer">JavaScript</a>
+	      <a class="btn" href="#" target="_blank" rel="noreferrer">SQL</a>
+            </div>
+          </div>
+        </article>
+        
+      </div>
+    </section>
+
+    <!-- À propos & Contact -->
+    <section id="apropos" class="two" aria-labelledby="titre-apropos" style="margin-top:24px;">
+      <article class="panel" id="a-propos">
+        <h2 id="titre-apropos" style="margin-top:0;">À propos</h2>
+        <p class="lead">Je transforme des besoins complexes en expériences simples, fluides et inclusives. Mon approche allie design et efficacité : je conçois des interfaces claires et performantes, documente et prototype des solutions, puis les rends concrètes à travers du code robuste.<br>
+Au-delà de l’interface, j’automatise les traitements de données pour accélérer les processus et fiabiliser les résultats, permettant aux équipes de se concentrer sur l’essentiel.
+Mon objectif : créer des produits numériques qui allient esthétique, performance et impact durable.</p>
+      </article>
+      <article id="contact" class="panel" aria-labelledby="titre-contact">
+        <h2 id="titre-contact" style="margin-top:0;">Me contacter</h2>
+        <p class="lead">Je suis disponible par email ou sur LinkedIn pour discuter de vos projets, idées ou questions. La réactivité est essentielle pour moi : je réponds à chaque message sous 24 à 48 heures. Que ce soit pour une collaboration, une demande d’information ou un premier contact, chaque échange est une opportunité de créer quelque chose de concret, utile et durable. J’ai hâte de découvrir vos besoins et d’y apporter une réponse adaptée.</p>
+        <div class="actions">
+          <a class="btn primary" href="mailto:oserambonimazato@gmail.com">✉️ Email</a>
+          <a class="btn" href="https://rambonimazato.github.io/">GitHub</a>
+          <a class="btn" href="www.linkedin.com/in/rambonimazato-osé-jacob-537284163" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>© <span id="year"></span> Rambonimazato Osé Jacob.</footer>
+  </main>
+
+  <script>
+    // --- Helpers ------------------------------------------------------------
+    const $ = (sel, el = document) => el.querySelector(sel);
+    const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
+
+    // Année dynamique
+    $('#year').textContent = new Date().getFullYear();
+
+    // Thème (préférence + toggle)
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const savedTheme = localStorage.getItem('theme');
+    const body = document.body;
+    function applyTheme(mode){
+      body.classList.toggle('theme-dark', mode === 'dark');
+      body.classList.toggle('theme-light', mode === 'light');
+      $('#themeToggle').setAttribute('aria-pressed', mode === 'dark');
+    }
+    applyTheme(savedTheme || (prefersDark.matches ? 'dark' : 'light'));
+    $('#themeToggle').addEventListener('click', () => {
+      const next = body.classList.contains('theme-dark') ? 'light' : 'dark';
+      applyTheme(next); localStorage.setItem('theme', next);
+    });
+
+    // Recherche + Filtre par tag
+    const grid = $('#grid');
+    const cards = $$('.card', grid);
+    const count = $('#count');
+    const q = $('#q');
+    const filterBar = $('#filters');
+    let activeTag = 'all';
+
+    function normalize(s){ return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,''); }
+
+    function applyFilters(){
+      const term = normalize(q.value.trim());
+      let visible = 0;
+      cards.forEach(c => {
+        const tags = c.dataset.tags || '';
+        const title = c.dataset.title || '';
+        const desc = c.dataset.desc || '';
+        const hay = normalize(`${title} ${desc} ${tags}`);
+        const matchText = term === '' || hay.includes(term);
+        const matchTag = activeTag === 'all' || tags.split(/\s+/).includes(activeTag);
+        const show = matchText && matchTag;
+        c.style.display = show ? '' : 'none';
+        visible += show ? 1 : 0;
+      });
+      count.textContent = `${visible} projet${visible>1?'s':''}`;
+    }
+
+    q.addEventListener('input', applyFilters);
+    filterBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-tag]');
+      if(!btn) return;
+      activeTag = btn.dataset.tag;
+      // MAJ état aria-selected
+      $$("[data-tag]", filterBar).forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+      applyFilters();
+    });
+
+    // Init
+    applyFilters();
+  </script>
+</body>
+</html>
