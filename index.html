@@ -102,9 +102,9 @@
     <div class="container" style="display:flex; align-items:center; gap:16px; justify-content:space-between;">
       <div class="brand">
         <img src="ose.JPG" alt="Osé" />
-        <div>
-          <small>Developer|Data analyst|Data scientist</small>
+        <div> 
           <strong style="font-size:16px;">RAMBONIMAZATO Osé Jacob</strong>
+		  <small>Developer|Data analyst|Data scientist</small>
         </div>
       </div>
       <nav class="actions" aria-label="Liens rapides">
@@ -226,45 +226,7 @@ Mon objectif : créer des produits numériques qui allient esthétique, performa
       applyTheme(next); localStorage.setItem('theme', next);
     });
 
-    // Recherche + Filtre par tag
-    const grid = $('#grid');
-    const cards = $$('.card', grid);
-    const count = $('#count');
-    const q = $('#q');
-    const filterBar = $('#filters');
-    let activeTag = 'all';
-
-    function normalize(s){ return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,''); }
-
-    function applyFilters(){
-      const term = normalize(q.value.trim());
-      let visible = 0;
-      cards.forEach(c => {
-        const tags = c.dataset.tags || '';
-        const title = c.dataset.title || '';
-        const desc = c.dataset.desc || '';
-        const hay = normalize(`${title} ${desc} ${tags}`);
-        const matchText = term === '' || hay.includes(term);
-        const matchTag = activeTag === 'all' || tags.split(/\s+/).includes(activeTag);
-        const show = matchText && matchTag;
-        c.style.display = show ? '' : 'none';
-        visible += show ? 1 : 0;
-      });
-      count.textContent = `${visible} projet${visible>1?'s':''}`;
-    }
-
-    q.addEventListener('input', applyFilters);
-    filterBar.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-tag]');
-      if(!btn) return;
-      activeTag = btn.dataset.tag;
-      // MAJ état aria-selected
-      $$("[data-tag]", filterBar).forEach(b => b.setAttribute('aria-selected', String(b === btn)));
-      applyFilters();
-    });
-
-    // Init
-    applyFilters();
+   
   </script>
 </body>
 </html>
